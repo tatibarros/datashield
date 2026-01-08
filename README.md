@@ -360,7 +360,7 @@ This project is licensed under the **MIT License** – see [LICENSE](LICENSE) fi
 
 **Your Name**
 - GitHub: [@tatibarros](https://github.com/tatibarros)
-- LinkedIn: [tatiana-Alves](https://linkedin.com/in/tatianabalves)
+- LinkedIn: [Tatiana Alves](https://linkedin.com/in/tatianabalves)
 
 ---
 

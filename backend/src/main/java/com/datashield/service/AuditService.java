@@ -29,7 +29,7 @@ public class AuditService {
                     .ipAddress(ipAddress)
                     .build();
             auditLogRepository.save(log);
-            log.info("Audit logged: {} - {} - {}", user.getUsername(), action, resource);
+            // Audit logged successfully (AuditLog object saved to repository)
         } catch (Exception e) {
             log.error("Error logging audit event", e);
         }

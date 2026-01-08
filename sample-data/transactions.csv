@@ -1,0 +1,11 @@
+transaction_id,customer_id,card_number,amount,date,merchant,category,status
+TXN001,1,4532123456789012,250.50,2024-01-15,Supermercado XYZ,Alimentação,Completo
+TXN002,2,5412345678901234,125.00,2024-01-16,Farmácia Central,Saúde,Completo
+TXN003,3,3714567890123456,890.00,2024-01-17,Passagens Aéreas,Viagem,Completo
+TXN004,4,6011234567890123,45.75,2024-01-18,Restaurante ABC,Alimentação,Completo
+TXN005,5,4916789012345678,320.00,2024-01-19,Loja de Roupas,Compras,Completo
+TXN006,6,3782123456789012,1200.00,2024-01-20,Hotel Premium,Hospedagem,Completo
+TXN007,7,5318901234567890,75.25,2024-01-21,Cinema Multiplex,Entretenimento,Completo
+TXN008,8,4024567890123456,500.00,2024-01-22,Academia Fitness,Saúde,Completo
+TXN009,9,3456789012345678,155.90,2024-01-23,Livraria Online,Educação,Completo
+TXN010,10,6012345678901234,620.00,2024-01-24,Eletrônicos Store,Compras,Completo

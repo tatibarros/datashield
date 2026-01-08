@@ -1,0 +1,11 @@
+id,name,email,phone,cpf,age,city,salary
+1,João Silva,joao.silva@email.com,11999999999,123.456.789-00,35,São Paulo,5000.00
+2,Maria Santos,maria.santos@email.com,21988888888,987.654.321-11,28,Rio de Janeiro,4500.00
+3,Pedro Oliveira,pedro.oliveira@email.com,31987777777,456.789.123-22,42,Belo Horizonte,6000.00
+4,Ana Costa,ana.costa@email.com,85986666666,789.123.456-33,31,Fortaleza,4800.00
+5,Carlos Ferreira,carlos.ferreira@email.com,47985555555,321.654.987-44,38,Curitiba,5200.00
+6,Juliana Alves,juliana.alves@email.com,71984444444,654.987.321-55,26,Salvador,4200.00
+7,Ricardo Gomes,ricardo.gomes@email.com,61983333333,147.258.369-66,45,Brasília,6500.00
+8,Fernanda Rocha,fernanda.rocha@email.com,41982222222,258.369.147-77,33,Blumenau,4900.00
+9,Lucas Martins,lucas.martins@email.com,92981111111,369.147.258-88,29,Manaus,4600.00
+10,Patricia Nunes,patricia.nunes@email.com,48980000000,741.852.963-99,37,Joinville,5100.00

@@ -56,8 +56,8 @@ export class LoginComponent {
       next: () => {
         this.router.navigate(['/dashboard']);
       },
-      error: (error) => {
-        alert('Login failed: ' + error.error.message);
+      error: (error: any) => {
+        alert('Login failed: ' + (error.error?.message || 'Unknown error'));
       }
     });
   }

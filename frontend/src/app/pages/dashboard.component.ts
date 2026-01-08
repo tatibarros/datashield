@@ -96,10 +96,10 @@ export class DashboardComponent implements OnInit {
 
   loadDatasets(): void {
     this.datasetService.listDatasets().subscribe({
-      next: (data) => {
+      next: (data: Dataset[]) => {
         this.datasets = data;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading datasets', error);
       }
     });

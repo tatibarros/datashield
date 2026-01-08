@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { DatasetService } from '../../services/dataset.service';
-import { Dataset } from '../../models/index';
+import { AuthService } from '../services/auth.service';
+import { DatasetService } from '../services/dataset.service';
+import { Dataset } from '../models/index';
 
 @Component({
   selector: 'app-dashboard',

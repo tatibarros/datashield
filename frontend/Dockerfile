@@ -1,9 +1,9 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps --no-optional
 COPY . .
-RUN npm run build
+RUN npm run build -- --configuration development
 
 FROM nginx:alpine
 COPY --from=builder /app/dist/datashield-frontend /usr/share/nginx/html

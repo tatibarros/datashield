@@ -8,6 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.datashield.domain.Dataset;
+import com.datashield.domain.User;
+import com.datashield.repository.DatasetRepository;
+import com.datashield.repository.UserRepository;
+import com.datashield.service.AuditService;
+
 import java.util.List;
 
 @RestController

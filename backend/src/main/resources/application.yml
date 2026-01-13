@@ -34,7 +34,7 @@ logging:
     console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
 
 jwt:
-  secret: ${JWT_SECRET:ThisIsAVeryLongSecretKeyThatIsAtLeast256BitsOfSecurityForHS512AlgorithmJwtTokenSigningPurposesOnlyChangeInProductionEnvironment12345}
+  secret: ${JWT_SECRET:ZXhhbXBsZS1zZWNyZXQta2V5LWF0LWxlYXN0LTUxMi1iaXRzLWxvbmctZm9yLWpzb24td2ViLXRva2VuLWhzNTEyLWFsZ29yaXRobS1zaWduaW5nLXB1cnBvc2UtY2hhbmdlLWluLXByb2R1Y3Rpb24tZW52aXJvbm1lbnQ=}
   expiration: 86400000
 
 app:

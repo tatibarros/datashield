@@ -20,6 +20,7 @@ import java.util.List;
 public class AnonymizationWorker {
     private final AnonymizationJobRepository jobRepository;
     private final DatasetRepository datasetRepository;
+    private final com.datashield.service.AuditService auditService;
 
     @Scheduled(fixedDelay = 5000)
     public void processJobs() {
@@ -51,12 +52,20 @@ public class AnonymizationWorker {
             jobRepository.save(job);
 
             log.info("Job {} completed successfully. Processed {} rows", job.getId(), processedRows);
+            // audit log
+            if (job.getTriggeredBy() != null) {
+                auditService.logJobCompleted(job.getTriggeredBy(), job.getId());
+            }
         } catch (Exception e) {
             log.error("Error processing job {}: {}", job.getId(), e.getMessage(), e);
             job.setStatus(AnonymizationJob.JobStatus.FAILED);
             job.setErrorMessage(e.getMessage());
             job.setCompletedAt(LocalDateTime.now());
             jobRepository.save(job);
+            // audit failure
+            if (job.getTriggeredBy() != null) {
+                auditService.logEvent(job.getTriggeredBy(), com.datashield.domain.AuditLog.AuditAction.JOB_FAILED, "JOB", job.getId(), "Job failed: " + e.getMessage());
+            }
         }
     }
 

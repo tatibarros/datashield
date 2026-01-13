@@ -188,6 +188,7 @@ http://localhost:8080/swagger-ui.html
 - `GET /api/policies/{id}` - Get policy details
 
 #### Jobs
+- `POST /api/jobs` - Start an anonymization job (params: datasetId, policyId)
 - `GET /api/jobs/dataset/{datasetId}` - List jobs for dataset
 - `GET /api/jobs/{id}` - Get job status
 - `GET /api/jobs/status/queued` - List queued jobs

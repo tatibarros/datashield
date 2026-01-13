@@ -17,6 +17,9 @@ import java.util.List;
 public class PolicyController {
     
     private final AnonymizationPolicyRepository policyRepository;
+    private final DatasetRepository datasetRepository;
+    private final UserRepository userRepository;
+    private final AuditService auditService;
 
     @GetMapping("/dataset/{datasetId}")
     @Operation(summary = "Get policies for a dataset")
@@ -31,5 +34,35 @@ public class PolicyController {
         AnonymizationPolicy policy = policyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Policy not found"));
         return ResponseEntity.ok(policy);
+    }
+
+    @PostMapping
+    @Operation(summary = "Create a new anonymization policy")
+    public ResponseEntity<AnonymizationPolicy> createPolicy(@RequestBody com.datashield.dto.PolicyRequest request) {
+        Dataset dataset = datasetRepository.findById(request.getDatasetId())
+                .orElseThrow(() -> new RuntimeException("Dataset not found"));
+
+        org.springframework.security.core.Authentication authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        User user = null;
+        if (authentication != null) {
+            String username = authentication.getName();
+            user = userRepository.findByUsername(username).orElse(null);
+        }
+        if (user == null) {
+            user = dataset.getOwner();
+        }
+
+        AnonymizationPolicy policy = AnonymizationPolicy.builder()
+                .name(request.getName())
+                .dataset(dataset)
+                .createdBy(user)
+                .rules(request.getRules())
+                .active(true)
+                .build();
+
+        AnonymizationPolicy saved = policyRepository.save(policy);
+        auditService.logPolicyCreated(user, saved.getId(), saved.getName());
+
+        return ResponseEntity.ok(saved);
     }
 }

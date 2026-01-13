@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
@@ -23,12 +24,30 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
+    private SecretKey getSigningKey() {
+        // If secret is too short, generate a secure key for HS512
+        if (jwtSecret == null || jwtSecret.length() < 64) {
+            log.warn("JWT secret is null or too short, generating secure 512-bit key for HS512");
+            return Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        }
+        
+        // Try to use as-is (should be at least 64 characters for 512 bits)
+        byte[] keyBytes = jwtSecret.getBytes();
+        if (keyBytes.length >= 64) {
+            return Keys.hmacShaKeyFor(keyBytes);
+        }
+        
+        // If still too short, generate secure key
+        log.warn("JWT secret bytes are {} bits, generating secure 512-bit key for HS512", keyBytes.length * 8);
+        return Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    }
+
     public String generateToken(Authentication authentication) {
         String username = authentication.getName();
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
 
-        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        SecretKey key = getSigningKey();
 
         return Jwts.builder()
                 .subject(username)
@@ -39,7 +58,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsernameFromJwt(String token) {
-        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+        SecretKey key = getSigningKey();
         Claims claims = Jwts.parser()
                 .verifyWith(key)
                 .build()
@@ -50,7 +69,7 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+            SecretKey key = getSigningKey();
             Jwts.parser()
                     .verifyWith(key)
                     .build()

@@ -49,4 +49,15 @@ public class AuthService {
                 .role(user.getRole().toString())
                 .build();
     }
+
+    public void resetPassword(String username, String newPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+        
+        log.info("Password reset for user: {}", username);
+    }
 }

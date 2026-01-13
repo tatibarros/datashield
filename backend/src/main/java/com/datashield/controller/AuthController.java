@@ -23,6 +23,13 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
+    @PostMapping("/reset-password")
+    @Operation(summary = "Reset user password (admin only)")
+    public ResponseEntity<String> resetPassword(@RequestParam String username, @RequestParam String password) {
+        authService.resetPassword(username, password);
+        return ResponseEntity.ok("Password reset for user: " + username);
+    }
+
     @GetMapping("/health")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("DataShield API is running");

@@ -32,7 +32,7 @@ This is a **production-inspired MVP** that showcases:
 ### 2️⃣ **Anonymization Policies**
 - Create named policies per dataset
 - Multiple anonymization strategies:
-  - **MASK**: Hide characters (e.g., `****1234`)
+  - **MASK**: Hide characters (e.g., `****12345`)
   - **HASH**: SHA-256 with salt
   - **SUPPRESS**: Remove or null values
   - **GENERALIZE**: Aggregate into ranges (age bands, etc.)

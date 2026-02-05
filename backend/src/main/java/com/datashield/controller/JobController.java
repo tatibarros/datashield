@@ -11,6 +11,12 @@ import com.datashield.repository.UserRepository;
 import com.datashield.service.AuditService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -78,4 +84,28 @@ public class JobController {
 
         return ResponseEntity.ok(saved);
     }
+
+        @GetMapping("/{id}/download")
+        @Operation(summary = "Download anonymized output for a job")
+        public ResponseEntity<Resource> downloadJobOutput(@PathVariable Long id) {
+            AnonymizationJob job = jobRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Job not found"));
+            if (job.getOutputFilePath() == null) {
+                throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Output not available");
+            }
+            try {
+                Path file = Paths.get(job.getOutputFilePath());
+                Resource resource = new UrlResource(file.toUri());
+                if (!resource.exists()) {
+                    throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "File not found");
+                }
+                String fileName = file.getFileName().toString();
+                return ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                        .body(resource);
+            } catch (Exception e) {
+                throw new RuntimeException("Could not serve file", e);
+            }
+        }
 }

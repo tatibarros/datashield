@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { JobService } from '../services/job.service';
@@ -65,19 +65,23 @@ import { Router } from '@angular/router';
     </div>
   `
 })
-export class JobsComponent {
+export class JobsComponent implements OnDestroy {
   datasetId?: number;
   policyId?: number;
   listDatasetId?: number;
   jobs: any[] = [];
   message?: string;
+  private pollingMap: { [jobId: number]: any } = {};
 
   constructor(private jobService: JobService, private router: Router) {}
 
   start() {
     if (!this.datasetId || !this.policyId) { return; }
     this.jobService.startJob(this.datasetId, this.policyId).subscribe({
-      next: (res) => this.message = `Job queued (id=${res.id})`,
+      next: (res) => {
+        this.message = `Job queued (id=${res.id})`;
+        this.startPolling(res.id);
+      },
       error: (err) => this.message = `Error: ${err.error?.message || err.message}`
     });
   }
@@ -85,8 +89,41 @@ export class JobsComponent {
   loadJobs() {
     if (!this.listDatasetId) { return; }
     this.jobService.listJobsForDataset(this.listDatasetId).subscribe({
-      next: (data) => this.jobs = data,
+      next: (data) => {
+        this.jobs = data;
+        // start polling for any non-terminal jobs
+        this.jobs.forEach(j => {
+          if (j.status === 'QUEUED' || j.status === 'RUNNING') {
+            this.startPolling(j.id);
+          }
+        });
+      },
       error: (err) => console.error(err)
     });
+  }
+
+  startPolling(jobId: number) {
+    if (this.pollingMap[jobId]) { return; }
+    const intervalId = setInterval(() => {
+      this.jobService.getJob(jobId).subscribe({
+        next: (job) => {
+          const idx = this.jobs.findIndex(j => j.id === job.id);
+          if (idx >= 0) { this.jobs[idx] = job; } else { this.jobs.unshift(job); }
+          if (job.status === 'SUCCEEDED' || job.status === 'FAILED') {
+            clearInterval(this.pollingMap[jobId]);
+            delete this.pollingMap[jobId];
+          }
+        },
+        error: (err) => {
+          console.error('Polling error', err);
+        }
+      });
+    }, 2000);
+    this.pollingMap[jobId] = intervalId;
+  }
+
+  ngOnDestroy(): void {
+    Object.values(this.pollingMap).forEach(id => clearInterval(id));
+    this.pollingMap = {};
   }
 }

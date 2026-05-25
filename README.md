@@ -359,7 +359,7 @@ This project is licensed under the **MIT License** – see [LICENSE](LICENSE) fi
 
 ## 👤 Author
 
-**Your Name**
+**Tatiana Alves**
 - GitHub: [@tatibarros](https://github.com/tatibarros)
 - LinkedIn: [Tatiana Alves](https://linkedin.com/in/tatianabalves)
 
